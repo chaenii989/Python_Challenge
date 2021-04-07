@@ -3,7 +3,6 @@ import os
 import csv
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-print(dir_path)
 os.chdir(dir_path)
 
 
@@ -50,17 +49,16 @@ with open(pypoll_file, encoding = "utf-8") as csvfile:
     winner_name = candidates_name[votes_per_candidates.index(winner_votes)]
     
     # Print in terminal
-    print("Election Results")
-    print("------------------------")
-    print(f"Total Votes : {vote_count}")
-    print("------------------------")
+    output = ("\nElection Results\n"
+    "------------------------\n"
+    f"Total Votes : {vote_count:,}\n"
+    "------------------------\n")
     
     for i in range(len(candidates_name)):
-        print(f"{candidates_name[i]} : {round(votes_percent[i],2)}% ({votes_per_candidates[i]})")
+        output += f"{candidates_name[i]} : {votes_percent[i]:.3f}% ({votes_per_candidates[i]:,})\n"
+    output += f"------------------------\nWinner : {winner_name}\n------------------------\n"
 
-    print("------------------------")
-    print(f"Winner : {winner_name}")
-    print("------------------------")
+print(output)
 
 # Export a text file
 
@@ -68,15 +66,7 @@ output_file = os.path.join('..','Output','election_data.txt')
 
 with open(output_file, "w") as text:
 
-    text.write("Election Results"+ "\n")
-    text.write("------------------------\n")
-    text.write(f"Total Votes : {vote_count}" + "\n")
-    text.write("------------------------\n")
-    for i in range(len(candidates_name)):
-        text.write(f"{candidates_name[i]} : {round(votes_percent[i],2)}% ({votes_per_candidates[i]})" + "\n")
-    text.write("------------------------\n")
-    text.write(f"Winner : {winner_name}" + "\n")
-    text.write("------------------------\n")
+    text.write(output)
 
 
 

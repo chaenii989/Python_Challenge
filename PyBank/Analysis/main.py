@@ -3,7 +3,6 @@ import os
 import csv
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-print(dir_path)
 os.chdir(dir_path)
 
 
@@ -28,7 +27,7 @@ with open(pybank_file, encoding ="utf-8") as csvfile:
     next(csvreader)
 
     # For Loop - Read through each row in csv data
-    for row in csvreader:
+    for i, row in enumerate(csvreader):
 
         # Add info in Lists
         Month.append(row[0])
@@ -41,30 +40,38 @@ with open(pybank_file, encoding ="utf-8") as csvfile:
         final_profit = int(row[1])
         net_profit = net_profit + final_profit
 
+            
         # Changes in Profit/Losses
         monthly_changes = final_profit - initial_profit
+
+        # during first month monthly change is 0
+        if i == 0:
+            monthly_changes = 0
+
         Changes.append(monthly_changes)
         net_profit_changes = net_profit_changes + monthly_changes
 
         initial_profit = final_profit
 
         # Get Average / Maximun & minimum amount
-        average_change = round(net_profit_changes/month_counts,2) 
 
         greatest_increase = max(Changes)
         greatest_decrease = min(Changes)
 
         increase_date = Month[Changes.index(greatest_increase)]
         decrease_date = Month[Changes.index(greatest_decrease)]
+    average_change = net_profit_changes/(month_counts-1) 
 
     # Print in terminal
-    print("Financial Analysis")
-    print("---------------------------")
-    print(f"Total Months : {month_counts}")
-    print(f"Total : ${net_profit}")
-    print(f"Average Change : ${average_change}")
-    print(f"Greatest Increase in Profits : {increase_date} (${greatest_increase})")
-    print(f"Greatest Decrease in Loses : {decrease_date} (${greatest_decrease})")
+    output = ("\nFinancial Analysis\n"
+    "---------------------------\n"
+    f"Total Months : {month_counts}\n"
+    f"Total : ${net_profit:,}\n"
+    f"Average Change : $ {average_change:,.2f}\n"
+    f"Greatest Increase in Profits : {increase_date} (${greatest_increase:,})\n"
+    f"Greatest Decrease in Loses : {decrease_date} (${greatest_decrease:,})\n")
+
+    print(output)
 
 # Export a text file
 
@@ -72,13 +79,7 @@ output_file = os.path.join('..','Output','budget_data.txt')
 
 with open(output_file, "w") as text:
 
-    text.write("Financial Analysis"+ "\n")
-    text.write("---------------------------\n")
-    text.write(f"Total Months : {month_counts}" + "\n")
-    text.write(f"Total : ${net_profit}" + "\n")
-    text.write(f"Average Change : ${average_change}" + "\n")
-    text.write(f"Greatest Increase in Profits : {increase_date} (${greatest_increase})" + "\n")
-    text.write(f"Greatest Decrease in Loses : {decrease_date} (${greatest_decrease})" + "\n")
+    text.write(output)
 
 
 
